@@ -4,21 +4,23 @@ from django.shortcuts import render
 
 def home(request):
     """
-    Podstawowy widok sprawdzający poprawność konfiguracji środowiska.
-    Ten widok zostanie użyty w Assignment 0 do weryfikacji setup'u.
+    Widok strony głównej używający HttpResponse z HTML jako string
+    Ten widok będzie zmapowany na URL '' (root) przez studenta
     """
-    context = {
-        'title': 'Django Workshop - Environment Check',
-        'message': 'Gratulacje! Twoje środowisko Django jest poprawnie skonfigurowane.',
-        'status': 'SUCCESS',
-        'next_steps': [
-            'Przejdź do Assignment 1',
-            'Utwórz swoją pierwszą aplikację Django',
-            'Rozpocznij naukę modeli i widoków'
-        ]
-    }
-    
-    return render(request, 'home.html', context)
+    return HttpResponse(
+        "<h1>🎉 Django Workshop</h1>"
+        "<p>Witaj w Django Workshop! URL mapping działa poprawnie.</p>"
+        "<p>Ta strona używa <strong>HttpResponse</strong> - Django zwraca HTML jako string.</p>"
+        "<p><a href='/info/'>Przejdź do strony info (używa render)</a></p>"
+    )
+
+
+def info(request):
+    """
+    Widok strony informacyjnej używający render z template
+    Ten widok będzie zmapowany na URL 'info/' przez studenta
+    """
+    return render(request, 'info.html')
 
 
 def health_check(request):

@@ -1,148 +1,148 @@
-# 🚀 Django Workshop - Assignment 0: Environment Check
+# 🚀 Django Workshop - Assignment 0: Pierwsze URL-e Django
 
-Witamy w pierwszym zadaniu z serii Django Workshop! To zadanie sprawdza czy Twoje środowisko programistyczne jest poprawnie skonfigurowane i gotowe do nauki Django.
+Witamy w pierwszym zadaniu z serii Django Workshop! To zadanie wprowadzi Cię w podstawy mapowania URL-i w Django.
 
-## 📋 Co sprawdza to zadanie?
+## 📋 Czego się nauczysz?
 
-Assignment 0 weryfikuje następujące elementy:
-
-- ✅ **Django Installation** - Czy Django jest zainstalowane i działa
-- ✅ **Dev Server** - Czy serwer deweloperski uruchamia się bez błędów  
-- ✅ **URL Routing** - Czy podstawowy routing działa poprawnie
-- ✅ **Templates** - Czy system szablonów jest skonfigurowany
-- ✅ **Static Files** - Czy pliki statyczne są obsługiwane
-- ✅ **Database** - Czy SQLite database działa
-- ✅ **Admin Panel** - Czy panel administracyjny jest dostępny
+- ✅ **Importowanie views** w pliku urls.py
+- ✅ **Mapowanie URL-i** na odpowiednie widoki
+- ✅ **Różnica między HttpResponse a render()** 
+- ✅ **Podstawy workflow GitHub Classroom**
 
 ## 🎯 Twoje zadanie
 
-**To zadanie nie wymaga pisania kodu!** Wszystko jest już skonfigurowane. Musisz tylko:
+### Problem do rozwiązania:
+Aplikacja ma dwa gotowe widoki (`views.home` i `views.info`), ale **nie są zmapowane na żadne URL-e**. Gdy uruchomisz serwer i wejdziesz na stronę główną, zobaczysz błąd 404.
 
-### 1. Uruchomić serwer deweloperski
+### Co musisz zrobić:
 
+#### 1. Zaimportuj views
+W pliku `workshop_project/urls.py` dodaj import views w odpowiednim miejscu
+
+#### 2. Dodaj mapowanie URL-i  
+W tym samym pliku dodaj mapowanie URL-i zgodnie z komentarzami TODO:
+- Strona główna ('') powinna mapować na views.home
+- Strona informacyjna ('info/') powinna mapować na views.info
+- Health check ('health/') powinien mapować na views.health_check
+
+## 🧪 Testowanie rozwiązania
+
+### 1. Uruchom serwer deweloperski
 ```bash
 python manage.py runserver
 ```
 
-### 2. Sprawdzić czy strona działa
-
-Otwórz przeglądarkę i przejdź na:
-- **http://localhost:8000** - Powinna pokazać się strona powitalną
+### 2. Sprawdź czy strony działają
+- **http://localhost:8000** - Powinna pokazać stronę główną (używa HttpResponse)
+- **http://localhost:8000/info/** - Powinna pokazać stronę informacyjną (używa template)
 - **http://localhost:8000/health/** - Powinno zwrócić "OK"
 
-### 3. Sprawdzić autograding
-
-Testy automatyczne sprawdzą czy wszystko działa:
-
+### 3. Sprawdź autograding
 ```bash
-# Uruchom wszystkie testy
+# Uruchom testy automatyczne (opcjonalne)
 DJANGO_SETTINGS_MODULE=workshop_project.settings python -m pytest tests/test_assignment_0.py -v
-
-# Lub krótszy sposób (jeśli pytest.ini jest skonfigurowany):
-python -m pytest tests/test_assignment_0.py -v
 ```
 
 ## ✅ Kryteria sukcesu
 
 Zadanie jest zaliczone gdy:
 
-1. **Wszystkie 13 testów przechodzą** ✅
-2. **Strona główna wyświetla się poprawnie** na http://localhost:8000
-3. **Health check endpoint** zwraca "OK" na /health/
-4. **Brak błędów** w konsoli podczas uruchamiania serwera
+1. **Wszystkie testy przechodzą** ✅
+2. **Strona główna** (/) wyświetla się poprawnie
+3. **Strona info** (/info/) wyświetla się poprawnie  
+4. **Brak błędów 404** na głównych endpoint-ach
+
+## 📚 Co się dzieje pod spodem?
+
+### HttpResponse vs render()
+
+**views.home** używa **HttpResponse**:
+```python
+return HttpResponse("<h1>Django Workshop</h1>...")
+```
+- Zwraca HTML bezpośrednio jako string
+- Proste, ale nie skaluje się dla większych stron
+
+**views.info** używa **render()**: 
+```python
+return render(request, 'info.html')
+```
+- Przetwarza plik template HTML
+- Może przekazywać dane kontekstu
+- Separation of concerns (logika vs prezentacja)
+
+### Mapowanie URL-i
+```python
+path('', views.home),      # Główna strona
+path('info/', views.info), # Strona /info/
+```
+- **Pierwszy argument**: wzorzec URL (string)
+- **Drugi argument**: funkcja widoku do wywołania
+- Django automatycznie przekazuje `request` do widoku
 
 ## 🐛 Rozwiązywanie problemów
 
-### Problem: "No module named django"
-```bash
-# Upewnij się że virtual environment jest aktywny
-source venv/bin/activate  # Linux/Mac
-# lub
-venv\\Scripts\\activate     # Windows
-
-# Zainstaluj zależności
-pip install -r requirements.txt
+### Problem: "NameError: name 'views' is not defined"
+```python
+# Upewnij się że zaimportowałeś views:
+from . import views
 ```
 
-### Problem: "Table doesn't exist"
+### Problem: Strona 404 na głównej stronie
+```python
+# Sprawdź czy masz mapowanie na pustą ścieżkę:
+path('', views.home),
+```
+
+### Problem: "Template does not exist: info.html"
+- Template `info.html` już istnieje w folderze `templates/`
+- Sprawdź czy masz `path('info/', views.info),` w urlpatterns
+
+### Problem: Server nie startuje
 ```bash
-# Uruchom migracje
+# Sprawdź czy masz aktywne venv:
+source venv/bin/activate  # Linux/Mac
+# venv\Scripts\activate     # Windows
+
+# Zainstaluj zależności:
+pip install -r requirements.txt
+
+# Uruchom migracje:
 python manage.py migrate
 ```
 
-### Problem: "DJANGO_SETTINGS_MODULE is not set"
-```bash
-# Uruchom testy z explicit settings module
-DJANGO_SETTINGS_MODULE=workshop_project.settings python -m pytest tests/test_assignment_0.py
-```
+## 🎓 Co dalej?
 
-### Problem: Port 8000 jest zajęty
-```bash
-# Użyj innego portu
-python manage.py runserver 8080
+Po zaliczeniu Assignment 0 będziesz gotowy do **Assignment 1: Pierwsza aplikacja Django**, gdzie:
 
-# Lub zabij proces na porcie 8000
-lsof -ti:8000 | xargs kill -9
-```
+- Utworzysz pierwszą aplikację Django
+- Poznasz różnicę między projektem a aplikacją
+- Skonfigurujesz INSTALLED_APPS
+- Zbudujesz pierwsze modele
 
 ## 🔧 Struktura projektu
 
 ```
 django_workshop_template/
 ├── manage.py                    # Django management script
-├── requirements.txt             # Python dependencies  
-├── pytest.ini                  # Test configuration
-├── db.sqlite3                  # SQLite database (po migracji)
-│
 ├── workshop_project/            # Main Django project
-│   ├── __init__.py
 │   ├── settings.py              # Django settings
-│   ├── urls.py                  # URL routing
-│   ├── views.py                 # View functions
-│   ├── wsgi.py                  # WSGI config
-│   └── asgi.py                  # ASGI config
-│
+│   ├── urls.py                  # 🎯 TU ROBISZ ZMIANY
+│   ├── views.py                 # Gotowe widoki
+│   └── ...
 ├── templates/                   # HTML templates
-│   ├── base.html               # Base template
-│   └── home.html               # Home page template
-│
-├── static/                      # Static files (CSS, JS, images)
-│   └── (empty - dodasz pliki w kolejnych assignments)
-│
-├── tests/                       # Test files
-│   ├── __init__.py
-│   └── test_assignment_0.py     # Assignment 0 tests
-│
-└── .devcontainer/               # GitHub Codespaces config
-    └── devcontainer.json        # Development environment setup
+│   └── info.html               # Template dla views.info
+└── tests/                      # Test files
+    └── test_assignment_0.py    # Testy autograding
 ```
-
-## 🎓 Co się nauczysz?
-
-Po ukończeniu Assignment 0 będziesz wiedział:
-
-- Jak uruchomić serwer deweloperski Django
-- Jak działają podstawowe URL patterns
-- Jak Django obsługuje templates i static files  
-- Jak uruchamiać testy pytest-django
-- Jak sprawdzać czy aplikacja działa poprawnie
-
-## 🚀 Co dalej?
-
-Po zaliczeniu Assignment 0 przechodzisz do **Assignment 1: Pierwszy Projekt i Aplikacja**, gdzie:
-
-- Utworzysz pierwszą aplikację Django
-- Dowiesz się czym różni się projekt od aplikacji
-- Skonfigurujesz INSTALLED_APPS
-- Napiszesz pierwszy własny widok
 
 ## 💡 Wskazówki
 
-1. **Zawsze aktywuj virtual environment** przed pracą
-2. **Sprawdź logi w konsoli** jeśli coś nie działa
-3. **Użyj `python manage.py help`** aby zobaczyć dostępne komendy
-4. **GitHub Codespaces** automatycznie skonfiguruje środowisko za Ciebie
-5. **Autograding** automatycznie sprawdzi Twoje rozwiązanie przy każdym push
+1. **Sprawdzaj logi** w konsoli gdy uruchomisz serwer
+2. **URL-e kończące się na /** wymagają slash w mapowaniu
+3. **Import views** musi być na górze pliku urls.py
+4. **GitHub autograding** sprawdza poprawność automatycznie po każdym push
+5. **Template info.html** jest już gotowy - nie musisz go edytować
 
 ---
 
@@ -156,4 +156,4 @@ Po zaliczeniu Assignment 0 przechodzisz do **Assignment 1: Pierwszy Projekt i Ap
 
 **Powodzenia!** 🎉
 
-> **Pamiętaj**: Assignment 0 to tylko sprawdzenie środowiska. Prawdziwa zabawa zacznie się w kolejnych zadaniach, gdzie będziesz budować prawdziwą aplikację Django krok po kroku!
+> **Pamiętaj**: Assignment 0 to podstawy URL mapping. W kolejnych zadaniach będziesz budować prawdziwą aplikację Django krok po kroku!
