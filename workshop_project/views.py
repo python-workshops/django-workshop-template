@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 
 
@@ -11,7 +11,7 @@ def home(request):
         "<h1>🎉 Django Workshop</h1>"
         "<p>Witaj w Django Workshop! URL mapping działa poprawnie.</p>"
         "<p>Ta strona używa <strong>HttpResponse</strong> - Django zwraca HTML jako string.</p>"
-        "<p><a href='/info/'>Przejdź do strony info (używa render)</a></p>"
+        "<p><a href='/info/'>Przejdź do strony info (używa render)</a> | <a href='/health/'>Health check (JsonResponse)</a></p>"
     )
 
 
@@ -25,6 +25,7 @@ def info(request):
 
 def health_check(request):
     """
-    Endpoint sprawdzający stan aplikacji - używany przez autograding
+    Health check endpoint używający JsonResponse
+    Ten widok będzie zmapowany na URL 'health/' przez studenta
     """
-    return HttpResponse("OK", status=200)
+    return JsonResponse({'status': 'ok'})

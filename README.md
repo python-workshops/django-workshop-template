@@ -6,13 +6,13 @@ Witamy w pierwszym zadaniu z serii Django Workshop! To zadanie wprowadzi Cię w 
 
 - ✅ **Importowanie views** w pliku urls.py
 - ✅ **Mapowanie URL-i** na odpowiednie widoki
-- ✅ **Różnica między HttpResponse a render()** 
+- ✅ **Trzy typy response Django:** HttpResponse, render(), JsonResponse
 - ✅ **Podstawy workflow GitHub Classroom**
 
 ## 🎯 Twoje zadanie
 
 ### Problem do rozwiązania:
-Aplikacja ma dwa gotowe widoki (`views.home` i `views.info`), ale **nie są zmapowane na żadne URL-e**. Gdy uruchomisz serwer i wejdziesz na stronę główną, zobaczysz błąd 404.
+Aplikacja ma trzy gotowe widoki (`views.home`, `views.info`, `views.health_check`), ale **nie są zmapowane na żadne URL-e**. Gdy uruchomisz serwer i wejdziesz na stronę główną, zobaczysz błąd.
 
 ### Co musisz zrobić:
 
@@ -21,9 +21,9 @@ W pliku `workshop_project/urls.py` dodaj import views w odpowiednim miejscu
 
 #### 2. Dodaj mapowanie URL-i  
 W tym samym pliku dodaj mapowanie URL-i zgodnie z komentarzami TODO:
-- Strona główna ('') powinna mapować na views.home
-- Strona informacyjna ('info/') powinna mapować na views.info
-- Health check ('health/') powinien mapować na views.health_check
+- Strona główna ('') → views.home (HttpResponse)
+- Strona informacyjna ('info/') → views.info (render)
+- Health check API ('health/') → views.health_check (JsonResponse)
 
 ## 🧪 Testowanie rozwiązania
 
@@ -33,9 +33,9 @@ python manage.py runserver
 ```
 
 ### 2. Sprawdź czy strony działają
-- **http://localhost:8000** - Powinna pokazać stronę główną (używa HttpResponse)
-- **http://localhost:8000/info/** - Powinna pokazać stronę informacyjną (używa template)
-- **http://localhost:8000/health/** - Powinno zwrócić "OK"
+- **http://localhost:8000** - Strona główna (HttpResponse z HTML)
+- **http://localhost:8000/info/** - Strona informacyjna (render z template)
+- **http://localhost:8000/health/** - API endpoint (JsonResponse z JSON)
 
 ### 3. Sprawdź autograding
 ```bash
@@ -54,14 +54,14 @@ Zadanie jest zaliczone gdy:
 
 ## 📚 Co się dzieje pod spodem?
 
-### HttpResponse vs render()
+### Trzy typy Django response
 
 **views.home** używa **HttpResponse**:
 ```python
 return HttpResponse("<h1>Django Workshop</h1>...")
 ```
 - Zwraca HTML bezpośrednio jako string
-- Proste, ale nie skaluje się dla większych stron
+- Najprostrzy sposób zwrócenia HTML
 
 **views.info** używa **render()**: 
 ```python
@@ -70,6 +70,14 @@ return render(request, 'info.html')
 - Przetwarza plik template HTML
 - Może przekazywać dane kontekstu
 - Separation of concerns (logika vs prezentacja)
+
+**views.health_check** używa **JsonResponse**:
+```python
+return JsonResponse({'status': 'ok'})
+```
+- Zwraca dane w formacie JSON
+- Używane w API i AJAX requests
+- Automatycznie ustawia Content-Type: application/json
 
 ### Mapowanie URL-i
 ```python

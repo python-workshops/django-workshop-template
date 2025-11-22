@@ -50,13 +50,14 @@
             Ta strona używa <strong>render()</strong> - Django przetwarza plik template.
         </div>
         
-        <p><strong>Jaka jest różnica?</strong></p>
+        <p><strong>Jakie są różnice między typami response?</strong></p>
         <ul>
             <li><strong>HttpResponse</strong> - zwraca HTML bezpośrednio jako string</li>
             <li><strong>render()</strong> - przetwarza plik template, może przekazywać dane kontekstu</li>
+            <li><strong>JsonResponse</strong> - zwraca dane JSON, używane w API</li>
         </ul>
         
-        <p><a href="/">← Powrót do strony głównej (używa HttpResponse)</a></p>
+        <p><a href="/">← Powrót do strony głównej (HttpResponse)</a> | <a href="/health/">Health check (JsonResponse)</a></p>
     </div>
 </body>
 </html>
