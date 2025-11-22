@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="header">
+    <div class="django-logo">🚀 Django Workshop</div>
+    <h1>{{ title }}</h1>
+</div>
+
+<div class="status-success">
+    <strong>✅ {{ status }}</strong><br>
+    {{ message }}
+</div>
+
+<div class="next-steps">
+    <h3>🎯 Następne kroki:</h3>
+    <ul>
+        {% for step in next_steps %}
+        <li>{{ step }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div style="text-align: center; margin-top: 40px; color: #6c757d;">
+    <p>
+        <strong>Assignment 0:</strong> Environment Check ✅<br>
+        <small>Jeśli widzisz tę stronę, Twoje środowisko jest gotowe do pracy!</small>
+    </p>
+</div>
+{% endblock %}
