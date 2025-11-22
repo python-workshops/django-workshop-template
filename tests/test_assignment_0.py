@@ -52,11 +52,12 @@ class Assignment0URLMappingTestCase(TestCase):
         resolver = resolve('/info/')
         self.assertEqual(resolver.func, views.info)
     
-    def test_health_check_still_works(self):
-        """Test 7: Sprawdza czy health check endpoint nadal działa"""
+    def test_health_check_accessible(self):
+        """Test 7: Sprawdza czy health check endpoint jest dostępny"""
         response = self.client.get('/health/')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content.decode(), 'OK')
+        # Sprawdź czy to JSON response
+        self.assertEqual(response['Content-Type'], 'application/json')
     
     def test_admin_still_accessible(self):
         """Test 8: Sprawdza czy panel admin jest nadal dostępny"""
@@ -77,13 +78,26 @@ class Assignment0URLMappingTestCase(TestCase):
         home_response = self.client.get('/')
         info_response = self.client.get('/info/')
         
-        # Oba powinny zawierać różne charakterystyczne teksty
+        # Home powinien zawierać informację o HttpResponse
         self.assertContains(home_response, 'HttpResponse')
-        self.assertContains(info_response, 'render()')
+        self.assertContains(home_response, 'zwraca HTML jako string')
         
-        # Nie powinny zawierać tych samych unikalnych słów
-        self.assertNotContains(home_response, 'render()')
-        self.assertNotContains(info_response, 'HttpResponse')
+        # Info powinien zawierać informację o render()
+        self.assertContains(info_response, 'render()')
+        self.assertContains(info_response, 'przetwarza plik template')
+        
+        # Home nie powinien mówić o render w głównej treści (może być w linkach)
+        self.assertNotContains(home_response, 'przetwarza plik template')
+    
+    def test_health_check_returns_json(self):
+        """Test 11: Sprawdza czy health check zwraca poprawny JSON"""
+        response = self.client.get('/health/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/json')
+        
+        import json
+        data = json.loads(response.content.decode())
+        self.assertEqual(data['status'], 'ok')
 
 
 @pytest.mark.django_db
